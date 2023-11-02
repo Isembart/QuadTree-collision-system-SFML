@@ -11,9 +11,9 @@ int main()
     window.setFramerateLimit(144);
     
     //initiate main quadtree
-    quadTree mainQT(1080,720,1);
-    mainQT.insert(new gameObject());
-    mainQT.insert(new gameObject());
+    quadTree mainQT(0,0,1080,720,1);
+    
+   
 
     while (window.isOpen())
     {
@@ -25,6 +25,9 @@ int main()
             }
         }
 
+        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
+            mainQT.insert(new gameObject());
+        }
         window.clear();
         mainQT.draw(window);
         // std::cout<<std::to_string(mainQT.getPosition().x)<<" "<< std::to_string(mainQT.getPosition().y)<<std::endl;

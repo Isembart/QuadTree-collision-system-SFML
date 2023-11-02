@@ -8,4 +8,7 @@ private:
 public:
     gameObject();
     ~gameObject();
+
+    sf::Vector2f getPosition(); 
+    void setPosition(sf::Vector2f position); 
 };

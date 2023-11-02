@@ -9,10 +9,10 @@ class quadTree
 private:
     // sf::Vector2f size;
     sf::RectangleShape rect;
+    sf::FloatRect boundary;
     int capacity;
     std::vector<gameObject*> objects; 
     bool divided;
-    
 
     //child quadTrees, remains NULL till division
     quadTree* nw;
@@ -22,8 +22,8 @@ private:
 public:
     //used to make empty quadtree objects available in the parent quadtree before subdivision
     quadTree();
-    quadTree(sf::Vector2f size,int capacity);
-    quadTree(float x,float y, int capacity);
+    // quadTree(sf::Vector2f size,int capacity);
+    quadTree(float x,float y, float a, float b, int capacity);
     ~quadTree();
 
     void subdivide();
@@ -31,6 +31,7 @@ public:
     void insert(gameObject* object);
 
     const sf::Vector2f getPosition();
+    sf::FloatRect* getBoundary();
     sf::RectangleShape* getRect();
 
 };
