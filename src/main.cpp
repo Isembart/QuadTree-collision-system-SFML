@@ -7,11 +7,19 @@
 
 int main()
 {
-    auto window = sf::RenderWindow{ { 1080u, 720u }, "CMake SFML Project" };
+    auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
     window.setFramerateLimit(144);
     
     //initiate main quadtree
-    quadTree mainQT(0,0,1080,720,5);
+    quadTree mainQT(0,0,1920,1080,5);
+    
+    for (int i = 0; i < 1000; i++)
+    {
+        gameObject go;
+        sf::Vector2f vec(rand()%580,rand()%520);
+        go.setPosition(vec);
+        mainQT.insert(&go);
+    }
     
    
 
@@ -23,16 +31,15 @@ int main()
             {
                 window.close();
             }
-            if(sf::Event::MouseButtonPressed == event.type){
-                sf::Vector2 position = sf::Mouse::getPosition(window);
-                std::cout<< position.x << " "<< position.y<<std::endl;
-                gameObject* go = new gameObject();
-                go->setPosition(sf::Vector2f(position));
-                mainQT.insert(go);
-            }
         }
 
-        
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            sf::Vector2 position = sf::Mouse::getPosition(window);
+            std::cout<< position.x << " "<< position.y<<std::endl;
+            gameObject* go = new gameObject();
+            go->setPosition(sf::Vector2f(position));
+            mainQT.insert(go);
+        }
         window.clear();
         mainQT.draw(window);
         // std::cout<<std::to_string(mainQT.getPosition().x)<<" "<< std::to_string(mainQT.getPosition().y)<<std::endl;
