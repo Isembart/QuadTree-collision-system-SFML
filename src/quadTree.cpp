@@ -72,6 +72,9 @@ void quadTree::draw(sf::RenderWindow &window)
 
 void quadTree::insert(gameObject* object)
 {
+    if(!boundary.contains(object->getPosition())){
+        return;
+    }
     if(objects.size() < capacity) {
         objects.push_back(object);
     } else{

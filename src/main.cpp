@@ -25,8 +25,11 @@ int main()
             }
         }
 
-        if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left)){
-            mainQT.insert(new gameObject());
+        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
+            sf::Vector2 position = sf::Mouse::getPosition();
+            gameObject* go = new gameObject();
+            go->setPosition(sf::Vector2f(position));
+            mainQT.insert(go);
         }
         window.clear();
         mainQT.draw(window);
