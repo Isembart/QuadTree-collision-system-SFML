@@ -1,13 +1,9 @@
 #include "quadTree.hpp"
 #include "gameObject.hpp"
-
-#include <iostream>
-#include <string>
-
 quadTree::quadTree()
 {
     divided=false;
-    capacity=1;
+    capacity=9999;
 }
 
 // quadTree::quadTree(sf::Vector2f _size, int _capacity)
@@ -59,6 +55,7 @@ sf::FloatRect* quadTree::getBoundary()
 }
 void quadTree::draw(sf::RenderWindow &window)
 {
+    
     window.draw(rect);
     // window.draw(rect);   
     if(divided){
@@ -67,6 +64,17 @@ void quadTree::draw(sf::RenderWindow &window)
         nw->draw(window);
         se->draw(window);
         sw->draw(window);
+    }
+
+
+    
+    //draw points
+    for (int i = 0; i < objects.size(); i++)
+    {
+        sf::CircleShape circle;
+        circle.setPosition(objects.at(i)->getPosition());
+        circle.setRadius(1);
+        window.draw(circle);
     }
 }
 
@@ -78,8 +86,15 @@ void quadTree::insert(gameObject* object)
     if(objects.size() < capacity) {
         objects.push_back(object);
     } else{
-        std::cout << "Subdividing!!@!" << std::endl;
-        subdivide();
+        if(divided==false) {
+            subdivide();
+        }
+
+        //once the quadTree has subdivided it passes the object to its children
+        nw->insert(object);
+        sw->insert(object);
+        ne->insert(object);
+        se->insert(object);
     }
 }
 
@@ -92,19 +107,19 @@ void quadTree::subdivide()
 
     // nw = new quadTree(rect.getSize().x/2,rect.getSize().y/2,capacity);
     nw = new quadTree(boundary.left, boundary.top, boundary.width/2, boundary.height/2, capacity);
-    nw->getRect()->setPosition(getPosition());
-    nw->getRect()->setFillColor(sf::Color(0,100,0,100)); 
+     
+    nw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
 
-    sw = new quadTree(boundary.left, boundary.top/2, boundary.width, boundary.height/2, capacity);
-    sw->getRect()->setPosition(getPosition()+sf::Vector2f(0,rect.getSize().y/2));
-    sw->getRect()->setFillColor(sf::Color(255,0,0,100)); 
+    sw = new quadTree(boundary.left, boundary.top+boundary.height/2, boundary.width/2, boundary.height/2, capacity);
+    // sw->getRect()->setPosition(getPosition()+sf::Vector2f(0,rect.getSize().y/2));
+    sw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
 
     ne = new quadTree(boundary.left + boundary.width/2, boundary.top, boundary.width/2, boundary.height/2, capacity);
-    ne->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,0));
-    ne->getRect()->setFillColor(sf::Color(255,100,0,100)); 
+    // ne->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,0));
+    ne->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 2560,255)); 
 
-    se = new quadTree(boundary.width/2, boundary.height/2, boundary.width/2, boundary.height/2, capacity);
-    se->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,rect.getSize().y/2));
-    se->getRect()->setFillColor(sf::Color(255,255,0,100)); 
+    se = new quadTree(boundary.left + boundary.width/2, boundary.top+ boundary.height/2, boundary.width/2, boundary.height/2, capacity);
+    // se->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,rect.getSize().y/2));
+    se->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,100)); 
 }
 

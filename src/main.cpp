@@ -11,7 +11,7 @@ int main()
     window.setFramerateLimit(144);
     
     //initiate main quadtree
-    quadTree mainQT(0,0,1080,720,1);
+    quadTree mainQT(0,0,1080,720,5);
     
    
 
@@ -23,14 +23,16 @@ int main()
             {
                 window.close();
             }
+            if(sf::Event::MouseButtonPressed == event.type){
+                sf::Vector2 position = sf::Mouse::getPosition(window);
+                std::cout<< position.x << " "<< position.y<<std::endl;
+                gameObject* go = new gameObject();
+                go->setPosition(sf::Vector2f(position));
+                mainQT.insert(go);
+            }
         }
 
-        if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
-            sf::Vector2 position = sf::Mouse::getPosition();
-            gameObject* go = new gameObject();
-            go->setPosition(sf::Vector2f(position));
-            mainQT.insert(go);
-        }
+        
         window.clear();
         mainQT.draw(window);
         // std::cout<<std::to_string(mainQT.getPosition().x)<<" "<< std::to_string(mainQT.getPosition().y)<<std::endl;
