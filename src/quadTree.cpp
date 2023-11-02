@@ -26,9 +26,7 @@ quadTree::quadTree(float x, float y, float a, float b,int _capacity)
 
     //construct a recntagle shape from sf::Rect
     rect.setSize(sf::Vector2f(boundary.width, boundary.height));
-    // rect.setPosition(sf::Vector2f(boundary.width - boundary.left, boundary.height - boundary.top));
     rect.setPosition(sf::Vector2f(boundary.left,boundary.top));
-    // rect.setPosition(sf::Vector2f(0,0));
 
     //capacity
     capacity = _capacity;
@@ -67,7 +65,6 @@ void quadTree::draw(sf::RenderWindow &window)
     }
 
 
-    
     //draw points
     for (int i = 0; i < objects.size(); i++)
     {
