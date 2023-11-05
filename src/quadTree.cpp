@@ -29,6 +29,8 @@ quadTree::quadTree(float x, float y, float a, float b,int _capacity)
     rect.setSize(sf::Vector2f(boundary.width, boundary.height));
     rect.setPosition(sf::Vector2f(boundary.left,boundary.top));
 
+    objects.clear();
+
     //capacity
     capacity = _capacity;
     divided=false;
@@ -83,11 +85,11 @@ void quadTree::insert(gameObjectPtr object)
     }
     if(objects.size() < capacity) {
         objects.push_back(object);
-    } else{
+    } 
+    else {
         if(divided==false) {
             subdivide();
         }
-
         //once the quadTree has subdivided it passes the object to its children
         nw->insert(object);
         sw->insert(object);
@@ -121,3 +123,30 @@ void quadTree::subdivide()
     se->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,100)); 
 }
 
+std::vector<gameObjectPtr> quadTree::query(sf::FloatRect range)
+{
+    std::vector<gameObjectPtr> found;
+    found.clear();
+    if(range.left - range.width > boundary.left + boundary.width || range.left + range.width < boundary.left - boundary.width || range.top - range.height > boundary.top + boundary.height || range.top + range.height < boundary.top - boundary.height ) {
+        return found;
+    }
+    for (int i = 0; i < objects.size(); i++)
+    {
+        if(range.contains(objects.at(i)->getPosition())){
+            found.push_back(objects.at(i));
+        }
+    }   
+    if(divided){
+        // v1.insert(v1.end(), v2.begin(), v2.end());
+        auto fnw = nw->query(range);
+        auto fne = ne->query(range);
+        auto fsw = sw->query(range);
+        auto fse = se->query(range);
+        found.reserve( fnw.size() + fne.size() + fsw.size() + fse.size()); // preallocate memory
+        found.insert(found.end(),fnw.begin(),fnw.end());
+        found.insert(found.end(),fne.begin(),fne.end());
+        found.insert(found.end(),fsw.begin(),fsw.end());
+        found.insert(found.end(),fse.begin(),fse.end());
+    }
+    return found;
+}
