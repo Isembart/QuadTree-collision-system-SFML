@@ -1,25 +1,26 @@
 #include <SFML/Graphics.hpp>
+#include "typedefs.hpp"
 #include "quadTree.hpp"
 #include "gameObject.hpp"
-
 #include <iostream>
 #include <string>
 
 int main()
 {
-    auto window = sf::RenderWindow{ { 1920u, 1080u }, "CMake SFML Project" };
+    auto window = sf::RenderWindow{ { 600, 600 }, "CMake SFML Project" };
     window.setFramerateLimit(144);
     
     //initiate main quadtree
-    quadTree mainQT(0,0,1920,1080,5);
+    quadTree mainQT(0,0,window.getSize().x,window.getSize().y,5);
     
-    for (int i = 0; i < 1000; i++)
-    {
-        gameObject go;
-        sf::Vector2f vec(rand()%580,rand()%520);
-        go.setPosition(vec);
-        mainQT.insert(&go);
-    }
+    //random initial points
+    // for (int i = 0; i < 10000; i++)
+    // {
+    //     gameObject go;
+    //     sf::Vector2f vec(rand()%1920,rand()%1080);
+    //     go.setPosition(vec);
+    //     mainQT.insert(&go);
+    // }
     
    
 
@@ -36,7 +37,7 @@ int main()
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             sf::Vector2 position = sf::Mouse::getPosition(window);
             std::cout<< position.x << " "<< position.y<<std::endl;
-            gameObject* go = new gameObject();
+            gameObjectPtr go = std::make_shared<gameObject>();
             go->setPosition(sf::Vector2f(position));
             mainQT.insert(go);
         }

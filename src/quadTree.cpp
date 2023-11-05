@@ -1,3 +1,4 @@
+#include "typedefs.hpp"
 #include "quadTree.hpp"
 #include "gameObject.hpp"
 quadTree::quadTree()
@@ -75,7 +76,7 @@ void quadTree::draw(sf::RenderWindow &window)
     }
 }
 
-void quadTree::insert(gameObject* object)
+void quadTree::insert(gameObjectPtr object)
 {
     if(!boundary.contains(object->getPosition())){
         return;
@@ -103,19 +104,19 @@ void quadTree::subdivide()
     //eg: southwest = se
 
     // nw = new quadTree(rect.getSize().x/2,rect.getSize().y/2,capacity);
-    nw = new quadTree(boundary.left, boundary.top, boundary.width/2, boundary.height/2, capacity);
+    nw = std::make_shared<quadTree>(boundary.left, boundary.top, boundary.width/2, boundary.height/2, capacity);
      
     nw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
 
-    sw = new quadTree(boundary.left, boundary.top+boundary.height/2, boundary.width/2, boundary.height/2, capacity);
+    sw = std::make_shared<quadTree>(boundary.left, boundary.top+boundary.height/2, boundary.width/2, boundary.height/2, capacity);
     // sw->getRect()->setPosition(getPosition()+sf::Vector2f(0,rect.getSize().y/2));
     sw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
 
-    ne = new quadTree(boundary.left + boundary.width/2, boundary.top, boundary.width/2, boundary.height/2, capacity);
+    ne = std::make_shared<quadTree>(boundary.left + boundary.width/2, boundary.top, boundary.width/2, boundary.height/2, capacity);
     // ne->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,0));
     ne->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 2560,255)); 
 
-    se = new quadTree(boundary.left + boundary.width/2, boundary.top+ boundary.height/2, boundary.width/2, boundary.height/2, capacity);
+    se = std::make_shared<quadTree>(boundary.left + boundary.width/2, boundary.top+ boundary.height/2, boundary.width/2, boundary.height/2, capacity);
     // se->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,rect.getSize().y/2));
     se->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,100)); 
 }

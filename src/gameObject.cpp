@@ -1,3 +1,4 @@
+#include "typedefs.hpp"
 #include "gameObject.hpp"
 
 gameObject::gameObject(){
