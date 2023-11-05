@@ -63,11 +63,21 @@ int main()
         window.draw(rect);
         
         if(sf::Mouse::isButtonPressed(sf::Mouse::Middle)){
+
+
+            //Mouse movement
+            sf::Vector2 position = sf::Mouse::getPosition(window);
+            boundary.left = position.x;
+            boundary.top = position.y;
+            rect.setPosition(sf::Vector2f(boundary.left,boundary.top));
+
+
             std::vector<gameObjectPtr> result = mainQT.query(boundary); 
             if(result.size() != 0){
                 for(auto obj : result)
                 { 
-                    sf::CircleShape circle(2);
+                    sf::CircleShape circle(5);
+                    circle.setOrigin(sf::Vector2f(circle.getRadius(),circle.getRadius()));
                     circle.setPosition(obj->getPosition()); 
                     circle.setFillColor(sf::Color(255,0,0,255));
                     window.draw(circle);

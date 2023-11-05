@@ -27,7 +27,9 @@ quadTree::quadTree(float x, float y, float a, float b,int _capacity)
 
     //construct a recntagle shape from sf::Rect
     rect.setSize(sf::Vector2f(boundary.width, boundary.height));
-    rect.setPosition(sf::Vector2f(boundary.left,boundary.top));
+    // rect.setPosition(sf::Vector2f(boundary.left,boundary.top));
+    rect.setPosition(boundary.getPosition());
+    rect.setOrigin(sf::Vector2f(0.5,0.5));
 
     objects.clear();
 
