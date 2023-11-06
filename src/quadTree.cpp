@@ -33,6 +33,10 @@ quadTree::quadTree(float x, float y, float a, float b,int _capacity)
 
     objects.clear();
 
+    rect.setFillColor(sf::Color(0,0,0,0));
+    rect.setOutlineColor(sf::Color(255,255,255,255));
+    rect.setOutlineThickness(1); 
+
     //capacity
     capacity = _capacity;
     divided=false;
@@ -68,16 +72,14 @@ void quadTree::draw(sf::RenderWindow &window)
         se->draw(window);
         sw->draw(window);
     }
-
-
-    //draw points
-    for (int i = 0; i < objects.size(); i++)
-    {
-        sf::CircleShape circle;
-        circle.setPosition(objects.at(i)->getPosition());
-        circle.setRadius(1);
-        window.draw(circle);
-    }
+    // //draw points
+    // for (int i = 0; i < objects.size(); i++)
+    // {
+    //     sf::CircleShape circle;
+    //     circle.setPosition(objects.at(i)->getPosition());
+    //     circle.setRadius(1);
+    //     window.draw(circle);
+    // }
 }
 
 void quadTree::insert(gameObjectPtr object)
@@ -110,19 +112,19 @@ void quadTree::subdivide()
     // nw = new quadTree(rect.getSize().x/2,rect.getSize().y/2,capacity);
     nw = std::make_shared<quadTree>(boundary.left, boundary.top, boundary.width/2, boundary.height/2, capacity);
      
-    nw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
+    // nw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
 
     sw = std::make_shared<quadTree>(boundary.left, boundary.top+boundary.height/2, boundary.width/2, boundary.height/2, capacity);
     // sw->getRect()->setPosition(getPosition()+sf::Vector2f(0,rect.getSize().y/2));
-    sw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
+    // sw->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,255)); 
 
     ne = std::make_shared<quadTree>(boundary.left + boundary.width/2, boundary.top, boundary.width/2, boundary.height/2, capacity);
     // ne->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,0));
-    ne->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 2560,255)); 
+    // ne->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 2560,255)); 
 
     se = std::make_shared<quadTree>(boundary.left + boundary.width/2, boundary.top+ boundary.height/2, boundary.width/2, boundary.height/2, capacity);
     // se->getRect()->setPosition(getPosition()+sf::Vector2f(rect.getSize().x/2,rect.getSize().y/2));
-    se->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,100)); 
+    // se->getRect()->setFillColor(sf::Color(rand() % 256,rand() % 256,rand() % 256,100)); 
 }
 
 std::vector<gameObjectPtr> quadTree::query(sf::FloatRect range)

@@ -10,7 +10,7 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
-set(SOURCE src/main.cpp src/quadTree.cpp src/gameObject.cpp)
+set(SOURCE src/main.cpp src/quadTree.cpp src/gameObject.cpp src/particle.cpp)
 
 add_executable(QuadTreeTest ${SOURCE})
 target_link_libraries(QuadTreeTest PRIVATE sfml-graphics)
