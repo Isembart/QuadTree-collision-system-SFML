@@ -7,16 +7,6 @@ quadTree::quadTree()
     capacity=9999;
 }
 
-// quadTree::quadTree(sf::Vector2f _size, int _capacity)
-// {
-//     // size = _size;
-//     rect.setSize(_size);
-//     //capacity
-//     capacity = _capacity;
-
-//     divided=false;
-// }
-
 quadTree::quadTree(float x, float y, float a, float b,int _capacity)
 {
     // rect.setSize(sf::Vector2f(x,y));

@@ -4,20 +4,20 @@
 #include "gameObject.hpp"
 #include "particle.hpp"
 #include <iostream>
-const float particleSize = 6;
+const float particleSize = 1;
 
-void randomPoints(sf::RenderWindow &window, quadTree &mainQT, std::vector<gameObjectPtr> &objects){
+void randomPoints(sf::RenderWindow &window, quadTreePtr mainQT, std::vector<gameObjectPtr> &objects){
     // random initial points
     for (int i = 0; i < 1000; i++)
     {
         sf::Vector2f vec(rand()%window.getSize().x,rand()%window.getSize().y);
         gameObjectPtr go = std::make_shared<particle>(vec,particleSize);
-        mainQT.insert(go);
+        mainQT->insert(go);
         objects.push_back(go);
     }
 }
 
-void checkRange(sf::RenderWindow &window, quadTree &mainQT)
+void checkRange(sf::RenderWindow &window, quadTreePtr mainQT)
 {
     //Create a range to query object
     sf::FloatRect boundary(100,100,100,100);
@@ -34,7 +34,7 @@ void checkRange(sf::RenderWindow &window, quadTree &mainQT)
     boundary.left = position.x;
     boundary.top = position.y;
     rect.setPosition(sf::Vector2f(boundary.left,boundary.top));
-    std::vector<gameObjectPtr> result = mainQT.query(boundary); 
+    std::vector<gameObjectPtr> result = mainQT->query(boundary); 
     window.draw(rect);
     if(result.size() != 0){
         for(auto obj : result)
@@ -51,27 +51,31 @@ void checkRange(sf::RenderWindow &window, quadTree &mainQT)
 
 int main()
 {
-    auto window = sf::RenderWindow{ { 1800, 900 }, "CMake SFML Project" };
+    sf::Clock clock;
+    sf::Time previousTime = clock.getElapsedTime();
+    sf::Time currentTime;
+    float fps;
+
+    auto window = sf::RenderWindow{ { 1020, 720 }, "CMake SFML Project" };
     window.setFramerateLimit(144);
 
     std::vector<gameObjectPtr> objects;    
-    quadTree mainQT(0,0,window.getSize().x,window.getSize().y,5);
-    
+    quadTreePtr mainQT = std::make_shared<quadTree>(0,0,window.getSize().x,window.getSize().y,1);
     randomPoints(window,mainQT,objects);
     
     while (window.isOpen())
     {
+        //fps 
+        currentTime = clock.getElapsedTime();
+        fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float
+        std::cout << "fps =" << fps << std::endl; // flooring it will make the frame rate a rounded number
+        previousTime = currentTime;
+
         for (auto event = sf::Event{}; window.pollEvent(event);)
         {
             if (event.type == sf::Event::Closed)
             {
                 window.close();
-            }
-            if(event.type == sf::Event::MouseButtonPressed){
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    
-                }
             }
         }
 
@@ -79,25 +83,25 @@ int main()
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             sf::Vector2 position = sf::Mouse::getPosition(window);
             gameObjectPtr go = std::make_shared<particle>(sf::Vector2f(position),particleSize);
-            mainQT.insert(go); 
+            mainQT->insert(go); 
             objects.push_back(go);
         }
 /////////////////////////////////////////////////////Update////////////////////
-        quadTree mainQT(0,0,window.getSize().x,window.getSize().y,2);
+        mainQT = std::make_shared<quadTree>(0,0,window.getSize().x,window.getSize().y,10);
         for(auto obj : objects){
             obj->update();
-            mainQT.insert(obj);
+            mainQT->insert(obj);
         }
 //////////////////////////////////////////////DRAW/////////////////////////////
         window.clear();
-        // mainQT.draw(window);
+        mainQT->draw(window);
 
         ///////////////////////////////////////////Collision Check////////////////////////
         for(auto obj : objects) {
             float x = obj->getPosition().x;
             float y = obj->getPosition().y;
             float radius = obj->getHitboxRadius()*2;
-            std::vector<gameObjectPtr> others = mainQT.query(sf::FloatRect(x-radius,y-radius,x+radius,y+radius));
+            std::vector<gameObjectPtr> others = mainQT->query(sf::FloatRect(x-radius,y-radius,x+radius,y+radius));
             for(auto otherObj : others)
             { 
                 if(obj->intersects(otherObj) && otherObj != obj){
@@ -130,5 +134,6 @@ int main()
         }
 
         window.display();
+
     }
 }
