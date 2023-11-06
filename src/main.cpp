@@ -4,7 +4,7 @@
 #include "gameObject.hpp"
 #include "particle.hpp"
 #include <iostream>
-const float particleSize = 1;
+const float particleSize = 8;
 
 void randomPoints(sf::RenderWindow &window, quadTreePtr mainQT, std::vector<gameObjectPtr> &objects){
     // random initial points
@@ -60,7 +60,7 @@ int main()
     window.setFramerateLimit(144);
 
     std::vector<gameObjectPtr> objects;    
-    quadTreePtr mainQT = std::make_shared<quadTree>(0,0,window.getSize().x,window.getSize().y,1);
+    quadTreePtr mainQT = std::make_shared<quadTree>(0,0,window.getSize().x,window.getSize().y,10);
     randomPoints(window,mainQT,objects);
     
     while (window.isOpen())
@@ -87,10 +87,10 @@ int main()
             objects.push_back(go);
         }
 /////////////////////////////////////////////////////Update////////////////////
-        mainQT = std::make_shared<quadTree>(0,0,window.getSize().x,window.getSize().y,10);
+        mainQT = std::make_shared<quadTree>(0,0,window.getSize().x,window.getSize().y,50);
         for(auto obj : objects){
             obj->update();
-            mainQT->insert(obj);
+            mainQT->insert(obj); //HOLY FUCK WHY DID I ADD THIS LINE
         }
 //////////////////////////////////////////////DRAW/////////////////////////////
         window.clear();

@@ -10,6 +10,8 @@ FetchContent_Declare(SFML
     GIT_TAG 2.6.x)
 FetchContent_MakeAvailable(SFML)
 
+SET(CMAKE_CXX_FLAGS  "-pg -no-pie -O4")
+
 set(SOURCE src/main.cpp src/quadTree.cpp src/gameObject.cpp src/particle.cpp)
 
 add_executable(QuadTreeTest ${SOURCE})
