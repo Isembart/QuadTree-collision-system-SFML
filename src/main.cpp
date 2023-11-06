@@ -9,7 +9,7 @@ const int quadTreeCapacity = 15;
 
 void randomPoints(sf::RenderWindow &window, quadTreePtr mainQT, std::vector<gameObjectPtr> &objects){
     // random initial points
-    for (int i = 0; i < 2000; i++)
+    for (int i = 0; i < 1000; i++)
     {
         sf::Vector2f vec(rand()%window.getSize().x,rand()%window.getSize().y);
         gameObjectPtr go = std::make_shared<particle>(vec,particleSize);
