@@ -29,7 +29,17 @@ void gameObject::setPosition(sf::Vector2f pos)
     position =  pos;
 }
 
+void gameObject::setHitboxRadius(float range)
+{
+    hitboxRadius = range;
+}
+
+float gameObject::getHitboxRadius()
+{
+    return hitboxRadius;
+}
+
 bool gameObject::intersects(gameObjectPtr other)
 {
-    return hitboxRadius >= sqrt((other->getPosition().x - position.x)*(other->getPosition().x - position.x) + (other->getPosition().y - position.y)*(other->getPosition().y - position.y));
+    return hitboxRadius*2 >= sqrt((other->getPosition().x - position.x)*(other->getPosition().x - position.x) + (other->getPosition().y - position.y)*(other->getPosition().y - position.y));
 }

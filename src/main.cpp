@@ -4,16 +4,14 @@
 #include "gameObject.hpp"
 #include "particle.hpp"
 #include <iostream>
-#include <string>
-
+const float particleSize = 6;
 
 void randomPoints(sf::RenderWindow &window, quadTree &mainQT, std::vector<gameObjectPtr> &objects){
     // random initial points
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 1000; i++)
     {
-        // gameObjectPtr go = new gameObject();
         sf::Vector2f vec(rand()%window.getSize().x,rand()%window.getSize().y);
-        gameObjectPtr go = std::make_shared<particle>(vec);
+        gameObjectPtr go = std::make_shared<particle>(vec,particleSize);
         mainQT.insert(go);
         objects.push_back(go);
     }
@@ -53,7 +51,7 @@ void checkRange(sf::RenderWindow &window, quadTree &mainQT)
 
 int main()
 {
-    auto window = sf::RenderWindow{ { 600, 600 }, "CMake SFML Project" };
+    auto window = sf::RenderWindow{ { 1800, 900 }, "CMake SFML Project" };
     window.setFramerateLimit(144);
 
     std::vector<gameObjectPtr> objects;    
@@ -61,8 +59,6 @@ int main()
     
     randomPoints(window,mainQT,objects);
     
-    
-
     while (window.isOpen())
     {
         for (auto event = sf::Event{}; window.pollEvent(event);)
@@ -82,32 +78,34 @@ int main()
         //insert new points on mouseClick
         if(sf::Mouse::isButtonPressed(sf::Mouse::Left)){
             sf::Vector2 position = sf::Mouse::getPosition(window);
-            gameObjectPtr go = std::make_shared<particle>(sf::Vector2f(position));
-            // gameObjectPtr go = new gameObject();
+            gameObjectPtr go = std::make_shared<particle>(sf::Vector2f(position),particleSize);
             mainQT.insert(go); 
             objects.push_back(go);
         }
 /////////////////////////////////////////////////////Update////////////////////
+        quadTree mainQT(0,0,window.getSize().x,window.getSize().y,2);
         for(auto obj : objects){
             obj->update();
+            mainQT.insert(obj);
         }
-
-
-
 //////////////////////////////////////////////DRAW/////////////////////////////
         window.clear();
-        mainQT.draw(window);
+        // mainQT.draw(window);
 
         ///////////////////////////////////////////Collision Check////////////////////////
         for(auto obj : objects) {
-            for (auto otherObj : objects)
+            float x = obj->getPosition().x;
+            float y = obj->getPosition().y;
+            float radius = obj->getHitboxRadius()*2;
+            std::vector<gameObjectPtr> others = mainQT.query(sf::FloatRect(x-radius,y-radius,x+radius,y+radius));
+            for(auto otherObj : others)
             { 
                 if(obj->intersects(otherObj) && otherObj != obj){
                     //collision!
                     sf::CircleShape c1,c2;
-                    sf::Vector2f newOrigin(5,5);
-                    c1.setRadius(5);
-                    c2.setRadius(5);
+                    sf::Vector2f newOrigin(particleSize,particleSize);
+                    c1.setRadius(particleSize);
+                    c2.setRadius(particleSize);
                     c1.setOrigin(newOrigin);
                     c2.setOrigin(newOrigin);
                     c1.setPosition(obj->getPosition());
@@ -120,7 +118,6 @@ int main()
             }
             
         }
-
 
         //draw object in the objects vector
         for(auto obj : objects) {
