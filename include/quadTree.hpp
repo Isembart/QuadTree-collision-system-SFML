@@ -34,8 +34,12 @@ public:
     sf::FloatRect* getBoundary();
     sf::RectangleShape* getRect();
 
-    //returns gameobjects in a specified range 
-    std::vector<gameObjectPtr> query(sf::FloatRect range);
+    
+    /// @brief Finds other gameObjects in the specified range 
+    /// @param range the rectangle within a search occurs
+    /// @param found Found objectswill be returned in this array
+    /// @return 
+    void query(sf::FloatRect range,std::vector<gameObjectPtr> &found);
 };
 
 
